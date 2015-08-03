@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class RequestMappingResolver {
 	private Mapping<List<String>> requestMapping;
@@ -134,17 +133,6 @@ public class RequestMappingResolver {
 	}
 	
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Mapping<List<String>> m=new Mapping<List<String>>();
-		Map<String, List<String>> map=new HashMap<String, List<String>>();
-		List<String> l=new LinkedList<String>();
-		l.add("kk");
-		map.put("tt", l);
-		m.setMapping(map);
-		RequestMappingResolver rmr=new RequestMappingResolver(m, new JsonParser().parse("{tpl:{kg:\"$$kk\"}}").getAsJsonObject());
-		System.out.println(rmr.resolveMapping());
 
-	}
 
 }
