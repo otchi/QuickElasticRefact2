@@ -36,7 +36,7 @@ public class LoadJsonConfigTest {
 /******************************************************************************************************************/	
 	public void testLoadFacets(){
 		System.out.println("-------> test LoadFacets :");
-		System.out.println(loadJsonConfig.loadFacets()+"\n\n");
+		System.out.println(loadJsonConfig.loadFacetsMapping()+"\n\n");
 	}
 /******************************************************************************************************************/	
 	

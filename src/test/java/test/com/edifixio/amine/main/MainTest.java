@@ -9,6 +9,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import test.com.edifixio.amine.controller.ElastiControllerTest;
 import test.com.edifixio.amine.load.LoadJsonConfigTest;
 import test.com.edifixio.amine.mapping.RequestMappingResolverTest;
 
@@ -26,7 +27,7 @@ public class MainTest {
 		
 	}
 /************************************************************************************************************************************/	
-	public static void callRequestMappingResolver(){
+	public static void callRequestMappingResolverTests(){
 	
 		try {
 			LoadJsonConfig loadJsonConfig=new LoadJsonConfig(new JsonParser()
@@ -49,12 +50,26 @@ public class MainTest {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void callElasticFirstControllerTests(){
+		ElastiControllerTest elastiControllerTest=new ElastiControllerTest(PATH_CONFIG);
+		elastiControllerTest.processQueryTest();
+		elastiControllerTest.executeTest();
+		elastiControllerTest.processResultTest();
+		
+	}
+	
+	
 /****************************************************************************************************************************************************/
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		System.out.println("//////////////////////////////////////////////////////////////////////// LoadJsonConfigTests :");
 		callLoadJsonConfigTests();
-		callRequestMappingResolver();
+		System.out.println("//////////////////////////////////////////////////////////////////////// RequestMappingResolver :");
+		callRequestMappingResolverTests();
+		System.out.println("//////////////////////////////////////////////////////////////////////// ElastiControllerTest :");
+		callElasticFirstControllerTests();
 
 	}
 

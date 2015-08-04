@@ -27,7 +27,7 @@ public  class  Mapping<Type>{
 	public String toString() {
 		// TODO Auto-generated method stub
 		//return super.toString();
-		return this.BeanClass+"\n"
+		return "class ::>>"+this.BeanClass+"\n mapping ::>> "
 				+this.mapping;
 	}
 

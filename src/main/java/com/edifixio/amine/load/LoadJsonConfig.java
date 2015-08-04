@@ -14,14 +14,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class LoadJsonConfig {
-	public static final String II="::";
-	public static final String MAPPING="mapping";
-	public static final String CLASS="class";
-	public static final String HOST="_host";
-	public static final String INDEXES="_indexes";
-	public static final String REQUEST="_request";
-	public static final String RESPONSE="_response";
-	public static final String FACETS="_facets";
+
+	private static final String II="::";
+	private static final String MAPPING="mapping";
+	private static final String CLASS="class";
+	private static final String HOST="_host";
+	private static final String INDEXES="_indexes";
+	private static final String REQUEST="_request";
+	private static final String RESPONSE="_response";
+	private static final String FACETS="_facets";
 	private JsonObject jsonObject;	
 	
 	public LoadJsonConfig(JsonObject jsonObject ){
@@ -30,23 +31,24 @@ public class LoadJsonConfig {
 	
 	public  MainConfig loadJsonConf() throws ClassNotFoundException{
 		MainConfig mainConfig=new MainConfig();
+		System.out.println("---->:::"+jsonObject);
 		mainConfig.setHost(Utiles.seletor(HOST, jsonObject).getAsString());
 		mainConfig.setIndexes(this.loadIndexes());
 		mainConfig.setRequestMapping(this.loadRequestMapping());
 		mainConfig.setResponseMapping(this.loadResponseMapping());
-		mainConfig.setFacets(this.loadFacets());
+		mainConfig.setFacets(this.loadFacetsMapping());
 	
 		return mainConfig;
 	}
 	
 	
 /*************************** loading the indexex and types*************************************/
-	public Map<String,List<String>> loadIndexes(){
+	public  Map<String,List<String>> loadIndexes(){
 		return loadMappingList(INDEXES);
 	}
 
 /*************************** loanding mapping formed at Map<String,List<String>> like request and indexes mapping************************************/
-	private  Map<String,List<String>> loadMappingList(String path){
+	public   Map<String,List<String>> loadMappingList(String path){
 		Map<String, List<String>> indexes=new HashMap<String, List<String>>();
 		Iterator<Entry<String, JsonElement>> iter=Utiles.seletor(path, jsonObject).getAsJsonObject().entrySet().iterator();
 					
@@ -63,7 +65,7 @@ public class LoadJsonConfig {
 		return indexes;
 	}
 /*********************************************** laoding a simple maping like response mapping *******************************************************/
-	private  Map<String,String> loadMapping(String path){
+	public   Map<String,String> loadMapping(String path){
 		Map<String,String> responseMapping=new HashMap<String, String>();
 		Iterator<Entry<String, JsonElement>> iter=Utiles.seletor(path, jsonObject).getAsJsonObject().entrySet().iterator();
 		
@@ -76,21 +78,21 @@ public class LoadJsonConfig {
 	}
 /************************************************************************************************************************************************/
 	
-	public Mapping<List<String>> loadRequestMapping() throws ClassNotFoundException{
+	public  Mapping<List<String>> loadRequestMapping() throws ClassNotFoundException{
 		Mapping<List<String>> requestMapping=new Mapping<List<String>>();
 		requestMapping.setBeanClass(Class.forName(Utiles.seletor(REQUEST+II+CLASS, jsonObject).getAsString()));
 		requestMapping.setMapping(loadMappingList(REQUEST+II+MAPPING));	
 		return requestMapping;
 	}
 /************************************************************************************************************************************************/
-	public Mapping<String> loadResponseMapping() throws ClassNotFoundException{
+	public  Mapping<String> loadResponseMapping() throws ClassNotFoundException{
 		Mapping<String> responseMapping=new Mapping<String>();
 		responseMapping.setBeanClass(Class.forName(Utiles.seletor(RESPONSE+II+CLASS, jsonObject).getAsString()));
 		responseMapping.setMapping(loadMapping(RESPONSE+II+MAPPING));
 		return responseMapping;
 	}
 /*************************************************************************************************************************************************/
-	public List<String> loadFacets(){
+	public  List<String> loadFacetsMapping(){
 		List<String> facets=new LinkedList<String>();
 		Iterator<JsonElement> facetsIter=Utiles.seletor(FACETS,jsonObject).getAsJsonArray().iterator();
 		
