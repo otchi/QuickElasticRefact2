@@ -70,6 +70,8 @@ public class MainTest {
 		callRequestMappingResolverTests();
 		System.out.println("//////////////////////////////////////////////////////////////////////// ElastiControllerTest :");
 		callElasticFirstControllerTests();
+		
+		
 
 	}
 
