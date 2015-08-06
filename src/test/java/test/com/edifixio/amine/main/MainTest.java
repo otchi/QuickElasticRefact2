@@ -9,17 +9,20 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-import test.com.edifixio.amine.controller.ElastiControllerTest;
+import test.com.edifixio.amine.controller.ElasticFirtControllerTest;
+import test.com.edifixio.amine.controller.ElasticIterateControllerTest;
 import test.com.edifixio.amine.load.LoadJsonConfigTest;
 import test.com.edifixio.amine.mapping.RequestMappingResolverTest;
 
 public class MainTest {
 	
 	public static final String PATH_CONFIG="/home/amine/Bureau/confQuery/Voiture/query.json"; 
-	
+	public static final String CONFIG="_config";
 /******************************************************************************************************************************/	
 	public static void callLoadJsonConfigTests(){
-		LoadJsonConfigTest loadJsonConfigTest=new LoadJsonConfigTest(PATH_CONFIG);
+		LoadJsonConfigTest loadJsonConfigTest =
+				new LoadJsonConfigTest(PATH_CONFIG);
+		
 		loadJsonConfigTest.testLoadFacets();
 		loadJsonConfigTest.testLoadRequestMapping();
 		loadJsonConfigTest.testLoadResponseMapping();
@@ -30,12 +33,16 @@ public class MainTest {
 	public static void callRequestMappingResolverTests(){
 	
 		try {
-			LoadJsonConfig loadJsonConfig=new LoadJsonConfig(new JsonParser()
-					.parse(new FileReader(new File(PATH_CONFIG)))
-					.getAsJsonObject().get("_config")
-					.getAsJsonObject());
-			RequestMappingResolverTest requestMappingResolverTest=new RequestMappingResolverTest(loadJsonConfig.loadRequestMapping(), PATH_CONFIG);
+			LoadJsonConfig loadJsonConfig=new LoadJsonConfig(
+																new JsonParser().parse(new FileReader(new File(PATH_CONFIG)))
+																			 	.getAsJsonObject().get(CONFIG)
+																			 	.getAsJsonObject());
+			
+			RequestMappingResolverTest requestMappingResolverTest =
+					new RequestMappingResolverTest(loadJsonConfig.loadRequestMapping(), PATH_CONFIG);
+			
 			requestMappingResolverTest.testResolveMapping();
+			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,24 +59,40 @@ public class MainTest {
 	}
 	
 	public static void callElasticFirstControllerTests(){
-		ElastiControllerTest elastiControllerTest=new ElastiControllerTest(PATH_CONFIG);
-		elastiControllerTest.processQueryTest();
+		ElasticFirtControllerTest elastiControllerTest =
+				new ElasticFirtControllerTest(PATH_CONFIG);
+		
+		
 		elastiControllerTest.executeTest();
 		elastiControllerTest.processResultTest();
-		
+		elastiControllerTest.facetsProcessTest();
 	}
+	public static void callElasticIteratedControllerTests(){
+		ElasticIterateControllerTest elastiControllerTest =
+				new ElasticIterateControllerTest(PATH_CONFIG);
+		
+	
+		elastiControllerTest.executeTest(); // 
+		elastiControllerTest.processResultTest();
+		elastiControllerTest.facetsProcessTest();
+	}
+	
+	
 	
 	
 /****************************************************************************************************************************************************/
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+
 		System.out.println("//////////////////////////////////////////////////////////////////////// LoadJsonConfigTests :");
 		callLoadJsonConfigTests();
 		System.out.println("//////////////////////////////////////////////////////////////////////// RequestMappingResolver :");
 		callRequestMappingResolverTests();
-		System.out.println("//////////////////////////////////////////////////////////////////////// ElastiControllerTest :");
+		System.out.println("//////////////////////////////////////////////////////////////////////// ElastiControllerTest for first iteration:");
 		callElasticFirstControllerTests();
+		System.out.println("//////////////////////////////////////////////////////////////////////// ElastiControllerTest :");
+		callElasticIteratedControllerTests();
 		
 		
 

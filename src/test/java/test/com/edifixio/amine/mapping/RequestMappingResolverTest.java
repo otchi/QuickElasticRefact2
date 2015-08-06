@@ -12,7 +12,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 public class RequestMappingResolverTest {
-	
+	public static final String QUERY="_query";
 	private RequestMappingResolver requestMappingResolver;
 	
 	public RequestMappingResolverTest(Mapping<List<String>> mapping,String path){
@@ -20,7 +20,7 @@ public class RequestMappingResolverTest {
 			this.requestMappingResolver=new RequestMappingResolver(mapping,
 																	new JsonParser()
 																	.parse(new FileReader(new File(path)))
-																	.getAsJsonObject().get("_query")
+																	.getAsJsonObject().get(QUERY)
 																	.getAsJsonObject());
 			
 		} catch (JsonIOException e) {

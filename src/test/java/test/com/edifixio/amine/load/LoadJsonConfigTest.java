@@ -12,14 +12,14 @@ import com.google.gson.JsonSyntaxException;
 public class LoadJsonConfigTest {
 	
 	private LoadJsonConfig loadJsonConfig;
-	
+	private static final String CONFIG="_config";
 /******************************************************************************************************************/	
 	public LoadJsonConfigTest(String path)  {
 		// TODO Auto-generated constructor stub
 		try {
 			this.loadJsonConfig=new LoadJsonConfig(new JsonParser()
 														.parse(new FileReader(new File(path)))
-														.getAsJsonObject().get("_config")
+														.getAsJsonObject().get(CONFIG)
 														.getAsJsonObject());
 		} catch (JsonIOException e) {
 			// TODO Auto-generated catch block

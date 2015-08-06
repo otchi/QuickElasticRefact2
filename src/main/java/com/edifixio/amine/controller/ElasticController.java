@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import com.edifixio.amine.config.MainConfig;
 import com.edifixio.amine.load.LoadJsonConfig;
 import com.edifixio.amine.mapping.Mapping;
+import com.edifixio.amine.mapping.RequestMappingResolver;
 import com.edifixio.amine.utiles.ElasticClient;
 import com.edifixio.amine.utiles.Utiles;
 import com.edifixio.jsonFastBuild.objectBuilder.JsonObjectBuilder;
@@ -24,18 +25,24 @@ import io.searchbox.core.Search.Builder;
 
 public class ElasticController {
 	
+	private static final String JS_CONFIG="_config";
+	private static final String JS_QUERY="_query";
+	private static final String SELECT_ALL="match_all";
+	private static final String ES_QUERY="query";
+	
+	
 	private MainConfig config;
 	private JsonObject query;
-	private ProcessResult processResult;
+
 /************************************************************************************************************************************/	
 	public ElasticController(JsonObject config){
 		try {
 			
-			this.config=new LoadJsonConfig(	config.get("_config")
+			this.config=new LoadJsonConfig(	config.get(JS_CONFIG)
 												  .getAsJsonObject())
 											.loadJsonConf();
 			
-			this.query=config.getAsJsonObject("_query");
+			this.query=config.getAsJsonObject(JS_QUERY);
 			
 			
 		} catch (ClassNotFoundException e) {
@@ -48,28 +55,40 @@ public class ElasticController {
 	public JsonObject processQuery(){
 		JsonObject newQuery=new JsonParser().parse(query.getAsJsonObject().toString())
 											.getAsJsonObject();
-		newQuery.remove("query");
-		newQuery.add("query", 
+		newQuery.remove(ES_QUERY);
+		newQuery.add(ES_QUERY, 
 				JsonObjectBuilder.init()
 								 .begin()
-									.putEmptyObject("match_all")
+									.putEmptyObject(SELECT_ALL)
 								 .end()
 								 .getJsonElement());
 		
 		return newQuery;
 	}
 	
-/**********************************************************************************************************************************************/
+/**
+ * @throws SecurityException 
+ * @throws NoSuchMethodException 
+ * @throws InvocationTargetException 
+ * @throws IllegalArgumentException 
+ * @throws IllegalAccessException ********************************************************************************************************************************************/
 // this methode hes same problem from type of recuperated field .............
-	public JsonObject processQuery(Object request){
+	public JsonObject processQuery(Object request) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		
 		
 		JsonParser jsonParser=new JsonParser();
-		JsonObject newQuery=jsonParser.parse(query.getAsJsonObject().toString())
-				.getAsJsonObject();
+		JsonObject newQuery=jsonParser	.parse(query.getAsJsonObject().toString())
+										.getAsJsonObject();
+		
 		//--------------------------------------------------------------------------------------------------------------
-		try {
-			Mapping<List<String>> requestConf=config.getRequestMapping();
+		
+			Mapping<List<String>> requestConf=new Mapping<List<String>>();
+			requestConf.setBeanClass(config.getRequestMapping().getBeanClass());
+			requestConf.setMapping(new RequestMappingResolver(
+					config.getRequestMapping(), query).resolveMapping());
+			
+			System.out.println("####"+request.getClass()+"####"+requestConf.getBeanClass());
+			//sSystem.out.println(requestConf.getBeanClass());
 			if(request.getClass()!=requestConf.getBeanClass()){
 				System.out.println("class de requete incompatible");
 			}else{
@@ -90,10 +109,14 @@ public class ElasticController {
 					//-----------------------------------------------------------------------------------------------------
 					while(iterFieldToReplace.hasNext()){
 						String selector=iterFieldToReplace.next();
+						System.out.println(selector);
+						System.out.println();
 						int indexOfPrefix=selector.lastIndexOf("::");
-						
-						JsonElement js=Utiles.seletor(selector.substring(0, indexOfPrefix), newQuery)
-											 .getAsJsonPrimitive();
+						System.out.println(indexOfPrefix);
+						if(indexOfPrefix<=0){
+							indexOfPrefix=0;
+						}
+						JsonElement js=Utiles.seletor(selector.substring(0, indexOfPrefix), newQuery);
 						//---------------------------------------------------------------------------------------------------
 						if(js.isJsonArray()){
 							int i=Integer.parseInt(selector.substring(indexOfPrefix+2));
@@ -112,7 +135,32 @@ public class ElasticController {
 				}
 			}
 		//--------------------------------------------------------------------------------------------------------------------
-		}  catch (NoSuchMethodException e) {
+	
+		return newQuery; 
+	}
+/****************************** use only the index for the moment ***********************************************/	
+	
+	public ProcessResult execute(){
+		ProcessResult processResult=null;
+		try {
+			processResult=new ProcessResult(send(new Search.Builder(processQuery().toString())));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return processResult;
+		
+	}
+
+/****************************************************************************************************************/
+	public ProcessResult execute(Object request){
+		ProcessResult processResult=null;
+		try {
+			processResult=new ProcessResult(send(new Search.Builder(processQuery(request).toString())));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
@@ -128,29 +176,7 @@ public class ElasticController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return newQuery; 
-	}
-/****************************** use only the index for the moment ***********************************************/	
-	
-	public void execute(){
-		try {
-			this.processResult=new ProcessResult(send(new Search.Builder(processQuery().toString())),
-												config.getResponseMapping());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-/****************************************************************************************************************/
-	public void execute(Object request){
-		try {
-			this.processResult=new ProcessResult(send(new Search.Builder(processQuery(request).toString())),
-												config.getResponseMapping());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		return processResult;
 		
 	}
 /***************************************************************************************************************/
@@ -171,11 +197,6 @@ public class ElasticController {
 	}
 
 
-/****************************************************************************************************************/
-
-	public ProcessResult getProcessResult() {
-		return processResult;
-	}
 /**********************************************************************************************************************/
 	public MainConfig getConfig() {
 		return config;

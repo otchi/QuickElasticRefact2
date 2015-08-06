@@ -1,6 +1,7 @@
 package com.edifixio.amine.facets;
 
 public class FacetTerm {
+	
 	private String term;
 	private Integer count;
 	private Boolean isChecked;
@@ -30,6 +31,12 @@ public class FacetTerm {
 	}
 	public void setIsChecked(Boolean isChecked) {
 		this.isChecked = isChecked;
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "\n<<"+term+"--"+count+"--"+isChecked+">>\n";
 	}
 
 }
