@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.edifixio.amine.config.MainConfig;
-import com.edifixio.amine.load.LoadJsonConfig;
-import com.edifixio.amine.mapping.Mapping;
-import com.edifixio.amine.mapping.RequestMappingResolver;
+import com.edifixio.amine.loadConfig.Config;
+import com.edifixio.amine.loadConfig.ConfigBuilder;
+import com.edifixio.amine.loadConfig.Mapping;
+import com.edifixio.amine.loadConfig.RequestMappingResolver;
 import com.edifixio.amine.utiles.ElasticClient;
 import com.edifixio.amine.utiles.Utiles;
 import com.edifixio.jsonFastBuild.objectBuilder.JsonObjectBuilder;
@@ -31,16 +31,16 @@ public class ElasticController {
 	private static final String ES_QUERY="query";
 	
 	
-	private MainConfig config;
+	private Config config;
 	private JsonObject query;
 
 /************************************************************************************************************************************/	
 	public ElasticController(JsonObject config){
 		try {
 			
-			this.config=new LoadJsonConfig(	config.get(JS_CONFIG)
+			this.config=new ConfigBuilder(	config.get(JS_CONFIG)
 												  .getAsJsonObject())
-											.loadJsonConf();
+											.buildConf();
 			
 			this.query=config.getAsJsonObject(JS_QUERY);
 			
@@ -198,7 +198,7 @@ public class ElasticController {
 
 
 /**********************************************************************************************************************/
-	public MainConfig getConfig() {
+	public Config getConfig() {
 		return config;
 	}
 /***********************************************************************************************************************/

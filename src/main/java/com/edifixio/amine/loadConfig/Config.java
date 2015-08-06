@@ -1,13 +1,11 @@
-package com.edifixio.amine.config;
+package com.edifixio.amine.loadConfig;
 
 import java.util.List;
 import java.util.Map;
 
-import com.edifixio.amine.mapping.Mapping;
 
 
-
-public class MainConfig {
+public class Config {
 
 
 	private String host;

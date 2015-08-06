@@ -4,15 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-import com.edifixio.amine.load.LoadJsonConfig;
+import com.edifixio.amine.loadConfig.ConfigBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import test.com.edifixio.amine.controller.ElasticFirtControllerTest;
 import test.com.edifixio.amine.controller.ElasticIterateControllerTest;
-import test.com.edifixio.amine.load.LoadJsonConfigTest;
-import test.com.edifixio.amine.mapping.RequestMappingResolverTest;
+import test.com.edifixio.amine.load.ConfigBuilderTest;
+import test.com.edifixio.amine.load.RequestMappingResolverTest;
 
 public class MainTest {
 	
@@ -20,20 +20,20 @@ public class MainTest {
 	public static final String CONFIG="_config";
 /******************************************************************************************************************************/	
 	public static void callLoadJsonConfigTests(){
-		LoadJsonConfigTest loadJsonConfigTest =
-				new LoadJsonConfigTest(PATH_CONFIG);
+		ConfigBuilderTest loadJsonConfigTest =
+				new ConfigBuilderTest(PATH_CONFIG);
 		
 		loadJsonConfigTest.testLoadFacets();
 		loadJsonConfigTest.testLoadRequestMapping();
 		loadJsonConfigTest.testLoadResponseMapping();
-		loadJsonConfigTest.testLoadJsonConf();
+		loadJsonConfigTest.testBuildConf();
 		
 	}
 /************************************************************************************************************************************/	
 	public static void callRequestMappingResolverTests(){
 	
 		try {
-			LoadJsonConfig loadJsonConfig=new LoadJsonConfig(
+			ConfigBuilder loadJsonConfig=new ConfigBuilder(
 																new JsonParser().parse(new FileReader(new File(PATH_CONFIG)))
 																			 	.getAsJsonObject().get(CONFIG)
 																			 	.getAsJsonObject());

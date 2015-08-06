@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 
 import com.edifixio.amine.facets.Facet;
 import com.edifixio.amine.facets.FacetTerm;
-import com.edifixio.amine.mapping.Mapping;
+import com.edifixio.amine.loadConfig.Mapping;
 import com.edifixio.amine.utiles.MyEntry;
 import com.edifixio.amine.utiles.Utiles;
 import com.google.gson.JsonElement;

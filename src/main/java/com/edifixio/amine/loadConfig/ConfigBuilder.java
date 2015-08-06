@@ -1,4 +1,4 @@
-package com.edifixio.amine.load;
+package com.edifixio.amine.loadConfig;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,13 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.edifixio.amine.config.MainConfig;
-import com.edifixio.amine.mapping.Mapping;
 import com.edifixio.amine.utiles.Utiles;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class LoadJsonConfig {
+public class ConfigBuilder {
 
 	private static final String II="::";
 	private static final String MAPPING="mapping";
@@ -25,12 +23,12 @@ public class LoadJsonConfig {
 	private static final String FACETS="_facets";
 	private JsonObject jsonObject;	
 	
-	public LoadJsonConfig(JsonObject jsonObject ){
+	public ConfigBuilder(JsonObject jsonObject ){
 		this.jsonObject=jsonObject;
 	}
 	
-	public  MainConfig loadJsonConf() throws ClassNotFoundException{
-		MainConfig mainConfig=new MainConfig();
+	public  Config buildConf() throws ClassNotFoundException{
+		Config mainConfig=new Config();
 		System.out.println("---->:::"+jsonObject);
 		mainConfig.setHost(Utiles.seletor(HOST, jsonObject).getAsString());
 		mainConfig.setIndexes(this.loadIndexes());

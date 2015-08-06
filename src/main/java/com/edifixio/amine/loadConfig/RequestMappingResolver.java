@@ -1,4 +1,4 @@
-package com.edifixio.amine.mapping;
+package com.edifixio.amine.loadConfig;
 
 import java.util.HashMap;
 import java.util.Iterator;

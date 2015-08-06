@@ -1,12 +1,12 @@
-package test.com.edifixio.amine.mapping;
+package test.com.edifixio.amine.load;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.List;
 
-import com.edifixio.amine.mapping.Mapping;
-import com.edifixio.amine.mapping.RequestMappingResolver;
+import com.edifixio.amine.loadConfig.Mapping;
+import com.edifixio.amine.loadConfig.RequestMappingResolver;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;

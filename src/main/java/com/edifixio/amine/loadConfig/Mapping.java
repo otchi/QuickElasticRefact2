@@ -1,20 +1,21 @@
-package com.edifixio.amine.mapping;
+package com.edifixio.amine.loadConfig;
 
 import java.util.Map;
 
 public  class  Mapping<Type>{
 
-	protected Class<?> BeanClass;
+	protected Class<?> beanClass;
 	protected Map<String, Type> mapping;
 	
 	
 	
 
 	public Class<?> getBeanClass() {
-		return BeanClass;
+		return beanClass;
 	}
 	public void setBeanClass(Class<?> beanClass) {
-		BeanClass = beanClass;
+		this.beanClass = beanClass;
+		
 	}
 	public Map<String, Type> getMapping() {
 		return mapping;
@@ -27,8 +28,12 @@ public  class  Mapping<Type>{
 	public String toString() {
 		// TODO Auto-generated method stub
 		//return super.toString();
-		return "class ::>>"+this.BeanClass+"\n mapping ::>> "
+		return "class ::>>"+this.beanClass+"\n mapping ::>> "
 				+this.mapping;
+	}
+	
+	public static void main(String args[]) throws NoSuchFieldException, SecurityException{
+		System.out.println(Mapping.class.getDeclaredField("beanClass").getType());
 	}
 
 }
